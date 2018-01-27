@@ -14,7 +14,7 @@ public class ConnectionManager {
         Connection conn = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite://tmp/teste.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:///home/clayton/NetBeansProjects/SchoollApp/database/database.db");
         } 
         catch (ClassNotFoundException | SQLException e) {
             

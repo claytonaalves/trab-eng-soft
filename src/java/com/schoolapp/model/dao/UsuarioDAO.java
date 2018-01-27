@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.schoolapp.bean.Usuario;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,30 +21,30 @@ public class UsuarioDAO implements InterfaceUsuarioDAO {
         
     @Override
     public void excluir(Integer codigo) throws SQLException {
-        PreparedStatement ps;
+        PreparedStatement stmt;
 
         String sql = "DELETE FROM usuario WHERE usuario_id = ?";
 
-        ps = conn.prepareStatement(sql);
-        ps.setInt(1, codigo);
-        ps.execute();
-        ps.close();
+        stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, codigo);
+        stmt.execute();
+        stmt.close();
     }
 
     @Override
     public void salvar(Usuario usuario) throws SQLException {
-        PreparedStatement ps;
+        PreparedStatement stmt;
 
         String sql = "INSERT INTO autor (nomecompleto, datanascimento, cpf, "
                 + "sexo, rua, bairro, cidade, estado, sobrenome, cep, status)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-        ps = conn.prepareCall(sql);
-        setPreparedStatement(usuario, ps);
+        stmt = conn.prepareCall(sql);
+        setPreparedStatement(usuario, stmt);
 
-        ps.executeUpdate();
+        stmt.executeUpdate();
 //      System.out.println("Debug - " + autor + ps);
-        ps.close();
+        stmt.close();
     }
     
     private void setPreparedStatement(Usuario usuario, PreparedStatement ps)
@@ -108,6 +109,20 @@ public class UsuarioDAO implements InterfaceUsuarioDAO {
         lista.add(usuario);
         
         return lista;
+    }
+
+    public boolean autentica(Usuario usuario) {
+        boolean usuarioEncontrado;
+        try {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM usuario WHERE login=? AND senha=?");
+            stmt.setQueryTimeout(30);
+            stmt.setString(1, usuario.getEmail());
+            stmt.setString(2, usuario.getSenha());
+            usuarioEncontrado = stmt.executeQuery().isBeforeFirst();
+        } catch (SQLException e) {
+            usuarioEncontrado = false;
+        }
+        return usuarioEncontrado;
     }
     
 }
