@@ -53,7 +53,7 @@ public class Login extends HttpServlet {
             session.setMaxInactiveInterval(10000); // 10 min
             session.setAttribute("usuario", usuario);
 //            request.getRequestDispatcher("home.jsp").forward(request, response);
-            response.sendRedirect("home.jsp");
+            response.sendRedirect("app?cmd=listarMenuPrincipal");
         } else {
             response.sendRedirect("loginIncorreto.jsp");
         }

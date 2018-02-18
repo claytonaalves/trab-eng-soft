@@ -4,7 +4,6 @@ import com.schoolapp.jdbc.ConnectionManager;
 import com.schoolapp.model.command.InterfaceCommand;
 import com.schoolapp.model.helper.CommandHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,12 +24,17 @@ public class MyFrontController extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher rd = null;
+        RequestDispatcher rd;
         commandHelper.setRequest(request);
         InterfaceCommand comando = commandHelper.getCommand();
         String pagina = comando.execute(request, response);
-        rd = request.getRequestDispatcher(pagina);
-        rd.forward(request, response);
+        
+//        if (request.getAttribute("redirect").equals("redirect")) {
+//            response.sendRedirect(pagina);
+//        } else {
+            rd = request.getRequestDispatcher(pagina);
+            rd.forward(request, response);
+//        }        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

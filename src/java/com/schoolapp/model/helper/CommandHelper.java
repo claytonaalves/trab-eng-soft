@@ -1,11 +1,17 @@
 package com.schoolapp.model.helper;
 
-import com.schoolapp.model.command.ConsultarUsuario;
-import com.schoolapp.model.command.InterfaceCommand;
-import com.schoolapp.model.dao.UsuarioDAO;
-import java.sql.Connection;
+import com.schoolapp.model.command.CadastrarCurso;
 import java.util.HashMap;
+import java.sql.Connection;
 import javax.servlet.http.HttpServletRequest;
+
+import com.schoolapp.model.command.ConsultarCurso;
+import com.schoolapp.model.command.ConsultarUsuario;
+import com.schoolapp.model.command.EditarCurso;
+import com.schoolapp.model.command.InterfaceCommand;
+import com.schoolapp.model.command.ListarMenuPrincipal;
+import com.schoolapp.model.dao.CursoDAO;
+import com.schoolapp.model.dao.UsuarioDAO;
 
 /**
  *
@@ -18,31 +24,25 @@ public class CommandHelper {
 
     public CommandHelper(Connection connection) {
         this.connection = connection;
-//        this.request = request;
 
         mapaComandos = new HashMap<>();
 
+        mapaComandos.put("listarMenuPrincipal", new ListarMenuPrincipal());
         mapaComandos.put("consultarUsuario", new ConsultarUsuario(new UsuarioDAO(connection)));
+                
+        mapaComandos.put("cadastrarCurso", new CadastrarCurso(new CursoDAO(connection)));
+        mapaComandos.put("consultarCurso", new ConsultarCurso(new CursoDAO(connection)));
+//        mapaComandos.put("atualizarCurso", new AtualizarCurso(new CursoDAO(connection)));
+//        mapaComandos.put("editarCurso", new EditarCurso(new CursoDAO(connection)));
+//        mapaComandos.put("excluirCurso", new ExcluirCurso(new CursoDAO(connection)));
 
-//        mapaComandos.put("cadastrarCliente", new CadastrarCliente(new ClienteDAO(pool), new NivelDeAcessoDAO(pool)));
-//        mapaComandos.put("consultarCliente", new ConsultarCliente(new ClienteDAO(pool)));
-//        mapaComandos.put("atualizarCliente", new AtualizarCliente(new ClienteDAO(pool), new NivelDeAcessoDAO(pool)));
-//        mapaComandos.put("editarCliente", new EditarCliente(new ClienteDAO(pool), new NivelDeAcessoDAO(pool)));
-//        mapaComandos.put("excluirCliente", new ExcluirCliente(new ClienteDAO(pool)));
-
-        //comando para a Editora
-//        mapaComandos.put("cadastrarEditora", new CadastrarEditora(new EditoraDAO(pool)));
-//        mapaComandos.put("consultarEditora", new ConsultarEditora(new EditoraDAO(pool)));
-//        mapaComandos.put("atualizarEditora", new AtualizarEditora(new EditoraDAO(pool)));
-//        mapaComandos.put("editarEditora", new EditarEditora(new EditoraDAO(pool)));
-//        mapaComandos.put("excluirEditora", new ExcluirEditora(new EditoraDAO(pool)));
     }
 
     public InterfaceCommand getCommand() {
 
         String cmd = request.getParameter("cmd");
         if (cmd == null) {
-        return mapaComandos.get("iniciarSiscultbook");
+            return mapaComandos.get("iniciarApp");
         }
         return mapaComandos.get(cmd);
         /*
