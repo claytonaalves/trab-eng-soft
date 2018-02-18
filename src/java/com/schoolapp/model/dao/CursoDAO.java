@@ -5,6 +5,7 @@ import com.schoolapp.util.Utilitario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,23 @@ public class CursoDAO {
     }
     
     public List<Curso> getCursos() throws SQLException {
+        PreparedStatement ps;
+        String sqlSelect = "SELECT * FROM curso";
+        ps = conn.prepareStatement(sqlSelect);
+        ResultSet rs = ps.executeQuery();
+
         List<Curso> cursos = new ArrayList<>();
-        Curso curso = new Curso();
-        curso.setNome("Matemática");
-        curso.setDataInicio(Utilitario.dataFormatada("21/12/2012"));
-        curso.setDataTermino(Utilitario.dataFormatada("21/12/2012"));
-        
-        cursos.add(curso);
-                
+        while (rs.next()) {
+            Curso curso = new Curso();
+            curso.setNome(rs.getString("nome"));
+            curso.setDataInicio(rs.getDate("dataInicio").toLocalDate());
+            curso.setDataTermino(rs.getDate("dataTermino").toLocalDate());
+            cursos.add(curso);
+        }
+
+        rs.close();
+        ps.close();
+            
         return cursos;
     }
 
